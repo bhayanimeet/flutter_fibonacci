@@ -9,64 +9,63 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   double id = 0;
-  int min = 0;
-  int nextNum = 1;
-  int result = 0;
-  List myItem = [];
-  List numbers = [];
-
-  fibonacci({required double index}){
-    if(index<=nextNum) {
-      result = min + nextNum;
-      numbers.add(result);
-      min = nextNum;
-      nextNum = result;
-      fibonacci(index: id);
-    }
-    else{
-      result = 0;
-      min = 0;
-      nextNum = 0;
-      numbers.clear();
-    }
-  }
+  int first = 0;
+  int second = 1;
+  int next = 0;
+  int c = 0;
+  List fibonacci = [0, 1];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Fibonacci series"),
+        title: const Text("Fibonacci series",
+            style: TextStyle(color: Colors.white)),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.indigo.shade400,
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Slider(
-                min: 0,
-                max: 100,
-                value: id,
-                onChanged: (val) {
-                  setState(() {
-                    id = val;
-                    fibonacci(index: id);
-                    myItem.length++;
-                  });
-                },
-              ),
-              ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: myItem.length,
-                itemBuilder: (context, i) => ListTile(
-                  title: Text("$numbers"),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Slider(
+              min: 0,
+              max: 20,
+              divisions: 20,
+              label: '${id.toInt()}',
+              value: id,
+              onChanged: (val) {
+                setState(() {
+                  id = val;
+                  for (c = 0; c < id; c++) {
+                    if (c <= 1) {
+                      next = c;
+                    } else {
+                      next = first + second;
+                      first = second;
+                      second = next;
+                      fibonacci.add(next);
+                    }
+                  }
+                });
+              },
+            ),
+          ),
+          Expanded(
+            flex: 10,
+            child: ListView.builder(
+              itemCount: id.toInt(),
+              itemBuilder: (context, i) => Card(
+                elevation: 3,
+                margin: const EdgeInsets.all(8),
+                child: ListTile(
+                  title: Text("${fibonacci[i]}"),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
